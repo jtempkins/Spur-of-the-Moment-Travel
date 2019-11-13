@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "Sh1loh123!",
-    "database": "travel_db",
+    "password": "mySQL25",
+    "database": "Bookings",
     "host": "localhost",
     "dialect": "mysql"
   },

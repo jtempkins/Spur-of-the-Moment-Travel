@@ -7,13 +7,11 @@ const axios = require("axios");
 var keys = require("../keys.js");
 
 var apiKey = keys.skyscannerKEY;
-var destination = "SFO";
-var departureDate = "2019-12-01";
-var returnDate = "2019-12-10";
+
 
 function getSessionID(destination, departureDate, returnDate) { 
     return new Promise(resolve =>{
-    let start = unirest("POST", "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/pricing/v1.0");
+        let start = unirest("POST", "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/pricing/v1.0");
 
         start.headers({
             "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
@@ -96,12 +94,14 @@ function getFlightResults(sessionID){
             let flightResult = {
               price : response.data.Itineraries[0].PricingOptions[0].Price,
               airline : outboundAirline[0].Name,
-              flightDepartureTime : outboundLegInfo[0].Departure,
-              flightArrivalTime : outboundLegInfo[0].Arrival,
-              fligthURL : response.data.Itineraries[0].PricingOptions[0].DeeplinkUrl
+              outboundDepartureTime : outboundLegInfo[0].Departure,
+              outboundArrivalTime : outboundLegInfo[0].Arrival,
+              inboundDepartureTime : inboundLegInfo[0].Departure,
+              inboundArrivalTime : inboundLegInfo[0].Arrival,
+              bookingURL : response.data.Itineraries[0].PricingOptions[0].DeeplinkUrl
 
             };
-            
+            console.log("Flight info", flightResult)
             resolve(flightResult);
                 
         })
@@ -114,15 +114,15 @@ function getFlightResults(sessionID){
 
 
 
-async function searchFlights(destination, departureDate, returnDate) {
-
+var searchFlights = async function (data) {
+   console.log(data);
+    var destination = data.airport;
+    var departureDate = data.departure;
+    var returnDate = data.return;
     let searchID = await getSessionID(destination, departureDate, returnDate); 
-    let flightData = await getFlightResults(searchID);
-    console.log(flightData);
+    return flightInfo = await getFlightResults(searchID,);
 
 }
 
-searchFlights(destination, departureDate, returnDate)
 
-
-module.exports = searchFlights;
+module.exports = {searchFlights: searchFlights}

@@ -8,41 +8,43 @@ var $arrival = ("#arrival");
 var $submitBtn = ("#submit");
 var $bookingList = ("#bookingList");
 
-// var $name = ("Fred");
-// var $destination = ("London");
-// var $departure = ("2019-12-03");
-// var $arrival = ("2019-12-03");
-// var $submitBtn = ("submit");
-// var $bookingList = ("bookingList");
-// The API object contains methods for each kind of request we'll make
-var API = {
-  saveBooking: function (booking) {
-    return $.ajax({
-      headers: {
-        "Content-Type": "application/json"
-      },
-      type: "POST",
-      url: "api/booking",
-      data: JSON.stringify(booking)
-    });
-  },
-  getBooking: function () {
-    return $.ajax({
-      url: "api/booking",
-      type: "GET"
-    });
-  },
-  deleteBooking: function (id) {
-    return $.ajax({
-      url: "api/booking/" + id,
-      type: "DELETE"
-    });
+function startSearch(newSearch) {
+    console.log(newSearch)
+    $.post("api/search", newSearch)
   }
-};
+
+function getSearches(newSearch) {
+    let searchName = newSearch.name || "";
+    if(searchName) {
+      searchName = "?name=" + searchName
+    }
+    $.get("/api/search/" + searchName, function(data){
+      console.log("Search History", data);
+      searches = data;
+      if (!searches || !searches.length) {
+        displayEmpty(author);
+      }
+      else {
+        initializeRows();
+      }
+    });
+}
+
+
+function deleteSearch(id) {
+    $.ajax({
+      method: "DELETE",
+      url: "api/search/" + id,
+    })
+    .then(function() {
+      getPosts($name.val());
+    });
+  };
+
 
 // refreshExamples gets new examples from the db and repopulates the list
 var refreshBooking = function () {
-  API.getBooking().then(function (data) {
+  getSearches().then(function (data) {
     $("#listBooking").empty();
     var $booking = data.map(function (data) {
       $("#listbooking").append(`<p>${data.hotel}</p><p>${data.price}</p><a href="${data.url}" target="_blank">${data.hotel}</a>`);  
@@ -53,21 +55,26 @@ var refreshBooking = function () {
 var handleFormSubmit = function(event) {
   event.preventDefault(); 
 
-  var userData = {
+  var newSearch = {
     name:  $("#name").val().trim(),
-    destination: $("#destination").val().trim(),
-    departure: $("#departure").val().trim(),
-    arrival: $("#arrival").val().trim()
+    destination : $("#destination").val().trim(),
+    destID : $(this).find(':selected').data('dest-id'),
+    airport : $(this).find(':selected').data('airport'),
+    departure : $("#departure").val().trim(),
+    return : $("#return").val().trim()
   };
 
-  if (!(userData.name && userData.destination && userData.departure && userData.arrival)) {
-    alert("You must enter your name, a city destination, departure and arrival dates!");
-    // return;
+  if (!(newSearch.name && newSearch.destination && newSearch.departure && newSearch.return)) {
+    alert("You must enter your name, a city destination, departure and return dates!");
+    return;
   }
 
-  API.saveBooking(userData).then(function() {
-    refreshBooking(); 
-  });
+
+
+  startSearch(newSearch)
+    // .then(function() {
+    //   refreshBooking(); 
+    // });
 
   $destination.val("");
   $departure.val("");
@@ -89,8 +96,5 @@ var handleFormSubmit = function(event) {
 // Add event listeners to the submit and delete buttons
 
 
-// $submitBtn.on("click", handleFormSubmit);
+$("submit").on("click", handleFormSubmit);
 
-
-
-// $exampleList.on("click", ".delete", handleDeleteBtnClick);
