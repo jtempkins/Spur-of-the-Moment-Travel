@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.0",
+    "babel-eslint": "^10.0.3",
     "dotenv": "^8.0.0",
     "express": "^4.17.0",
     "express-handlebars": "^3.1.0",
@@ -27,6 +28,10 @@
     "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-prettier": "^3.1.0",
     "mocha": "^6.1.4",
+    "nodemon": "^1.19.4",
     "prettier": "^1.17.1"
+  },
+  "scripts": {
+    "serve": "nodemon server.js"
   }
 }

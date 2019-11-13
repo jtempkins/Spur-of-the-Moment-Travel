@@ -13,10 +13,10 @@ module.exports = function(app) {
 
   // Load example page and pass in an example by id
   app.get("/booking/:id", function(req, res) {
-    db.Bookings.findOne({ where: { id: req.params.id } }).then(function(
+    db.Bookings.findOne({ where: { name: req.params.id } }).then(function(
       dbbooking
     ) {
-      res.rend("booking", {
+      res.rend("indesx", {
         booking: dbbooking
       });
     });
