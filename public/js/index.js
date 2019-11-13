@@ -1,100 +1,90 @@
-// Get references to page elements
-var $name = ("#name");
-var $destination = ("#destination");
-//add switch case
+/* eslint-disable prettier/prettier */
+$(document).ready(function() {
+  // Get references to page elements
+  var $name = "#name";
+  var $destination = "#destination";
+  //add switch case
 
-var $departure = ("#departure");
-var $arrival = ("#arrival");
-var $submitBtn = ("#submit");
-var $bookingList = ("#bookingList");
+  var $departure = "#departure";
+  var $arrival = "#arrival";
+  var $searchList = "#search-list";
 
-function startSearch(newSearch) {
-    console.log(newSearch)
-    $.post("api/search", newSearch)
+  function startSearch(newSearch) {
+    console.log(newSearch);
+    $.post("api/search", newSearch, getSearches);
   }
 
-function getSearches(newSearch) {
+  function getSearches(newSearch) {
     let searchName = newSearch.name || "";
-    if(searchName) {
-      searchName = "?name=" + searchName
+    if (searchName) {
+      searchName = "?name=" + searchName;
     }
-    $.get("/api/search/" + searchName, function(data){
+    $.get("/api/search/" + searchName, function(data) {
       console.log("Search History", data);
       searches = data;
       if (!searches || !searches.length) {
         displayEmpty(author);
-      }
-      else {
-        initializeRows();
+      } else {
+        initializeRows(searches);
       }
     });
-}
-
-
-function deleteSearch(id) {
-    $.ajax({
-      method: "DELETE",
-      url: "api/search/" + id,
-    })
-    .then(function() {
-      getPosts($name.val());
-    });
-  };
-
-
-// refreshExamples gets new examples from the db and repopulates the list
-var refreshBooking = function () {
-  getSearches().then(function (data) {
-    $("#listBooking").empty();
-    var $booking = data.map(function (data) {
-      $("#listbooking").append(`<p>${data.hotel}</p><p>${data.price}</p><a href="${data.url}" target="_blank">${data.hotel}</a>`);  
-    })})};
-
-// handleFormSubmit is called whenever we submit a new example
-// Save the new example to the db and refresh the list
-var handleFormSubmit = function(event) {
-  event.preventDefault(); 
-
-  var newSearch = {
-    name:  $("#name").val().trim(),
-    destination : $("#destination").val().trim(),
-    destID : $(this).find(':selected').data('dest-id'),
-    airport : $(this).find(':selected').data('airport'),
-    departure : $("#departure").val().trim(),
-    return : $("#return").val().trim()
-  };
-
-  if (!(newSearch.name && newSearch.destination && newSearch.departure && newSearch.return)) {
-    alert("You must enter your name, a city destination, departure and return dates!");
-    return;
   }
 
+  // Function for creating a new list row for searches
+  function createSearchRow(searchData) {
+    var newTr = $("<tr>");
+    newTr.data("name", searchData);
+    newTr.append("<td>" + searchData.destination + "</td>");
+    // Insert additional column information
+    return newTr;
+  }
 
+  // Function for retrieving authors and getting them ready to be rendered to the page
+  function initializeRows(data) {
+    var rowsToAdd = [];
+    for (var i = 0; i < data.length; i++) {
+      rowsToAdd.push(createSearchRow(data[i]));
+    }
+    $searchList.prepend(rowsToAdd);
+  }
 
-  startSearch(newSearch)
-    // .then(function() {
-    //   refreshBooking(); 
-    // });
+  function deleteSearch(id) {
+    $.ajax({
+      method: "DELETE",
+      url: "api/search/" + id
+    }).then(function() {
+      getSearches($name.val());
+    });
+  }
 
-  $destination.val("");
-  $departure.val("");
-  $arrival.val("");
-};
+  // handleFormSubmit is called whenever we submit a new example
+  // Save the new example to the db and refresh the list
+  var handleFormSubmit = function(event) {
+    event.preventDefault();
+    var newSearch = {
+      name: $("#name").val().trim(),
+      destination: $("#destination").val().trim(),
+      destID: $(this).find(":selected").data("dest-id"),
+      airport: $(this).find(":selected").data("airport"),
+      departure: $("#departure").val().trim(),
+      return: $("#return").val().trim()
+    };
+    
+    console.log(newSearch);
 
-// handleDeleteBtnClick is called when an example's delete button is clicked
-// Remove the example from the db and refresh the list
-// var handleDeleteBtnClick = function() {
-//   var idToDelete = $(this) 
-//     .parent()
-//     .attr("data-id");
+    if (!(newSearch.name && newSearch.destination && newSearch.departure && newSearch.return)) {
+      alert("You must enter your name, a city destination, departure and return dates!");
+      return;
+    }
 
-//   API.deleteExample(idToDelete).then(function() {
-//     refreshExamples(); 
-//   });
-// };
+    startSearch(newSearch);
 
-// Add event listeners to the submit and delete buttons
+    // $destination.val("");
+    // $departure.val("");
+    // $arrival.val("");
+  };
 
+  // Add event listeners to the submit and delete buttons
 
-$("submit").on("click", handleFormSubmit);
-
+  $("#searchform").on("submit", handleFormSubmit);
+});

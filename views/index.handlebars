@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-8 offset-2">
         <h1>{{msg}}</h1>
-        <h2>This is our Home Page!</h2>
-        <form class="clearfix mb-4" action="POST">
+        <h2>Find the cheapest trip!</h2>
+        <form id="searchform" class="clearfix mb-4" >
           <div class="form-group">
             <label for="userInput">Name</label>
             <input type="text" id="name" class="form-control" aria-describedby="name" placeholder="">
@@ -13,10 +13,10 @@
             <label for="state">Destination</label>
               <select class="custom-select" id="destination" name="destination">
                 <option value=""></option>
-                <option value="" data-airport="LHR" data-dest-id="-2601889">London</option>
-                <option value="" data-airport="JFK" data-dest-id="20088325">New York</option>
-                <option value="" data-airport="CDG" data-dest-id="-1456928">Paris</option>
-                <option value="" data-airport="SYD" data-dest-id="-1603135">Sydney</option>
+                <option value="London" data-airport="LHR" data-dest-id="-2601889">London</option>
+                <option value="New York" data-airport="JFK" data-dest-id="20088325">New York</option>
+                <option value="Paris" data-airport="CDG" data-dest-id="-1456928">Paris</option>
+                <option value="Sydney" data-airport="SYD" data-dest-id="-1603135">Sydney</option>
               </select>
           </div>
           <div class="form-group">
@@ -28,16 +28,21 @@
             <label for="userInput">Return Date</label>
             <input type="date" id="return" class="form-control" aria-describedby="departure" placeholder="YYYY-MM-DD">
           </div>
-          <button type="submit" class="btn btn-primary float-right submit">Submit</button>
+          <button type="submit" class="btn btn-primary float-right submit">Search</button>
         </form>
         
         <h3>Trips:</h3>
-        <ul id="example-list" class="list-group">
-          {{#each booking}}
-          <li data-id="{{this.id}}" class="list-group-item">
-            <a href="example/{{this.id}}">{{this.text}}</a>
-            <button class="btn btn-danger float-right delete">ｘ</button>
-          </li>
+        <ul id="search-list" class="list-group">
+          {{#each bookings}}
+            <li>
+              <tr><span class="label">ID:</span> {{this.id}}</tr>
+              <tr><span class="label">Author:</span> {{this.Name}}</tr>
+              <tr><span class="label">Quote:</span> {{this.destination}}</tr>
+
+              <button data-id="{{this.id}}" class="delquote">Delete</button>
+
+              <a href="/{{this.id}}">Update this quote</a>
+            </li>
           {{/each}}
         </ul>
       </div>
