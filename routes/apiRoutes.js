@@ -9,12 +9,14 @@ var flightAPI = require("../externalRoutes/skyscannerAPI.js");
 
 module.exports = function(app) {
   // Get all in booking table
-  app.get("/api/search", function(req, res) {
+  app.get("/api/search/", function(req, res) {
+    
     db.Bookings.findAll({
-      where: {
-        name: req.body.name
-      },
+      // where: {
+      //   name: req.body.name
+      // },
     }).then(function(dbbooking) {
+      console.log(dbbooking);
       res.json(dbbooking);
     });
   });
@@ -29,10 +31,6 @@ module.exports = function(app) {
 
     let departureDate = req.body.return
     let roomInfo = await hotelAPI.getHotel(destID, arrivalDate, departureDate);
-
-    
-    console.log(flightInfo)
-    console.log(roomInfo)
 
     let searchResult = {
       name: req.body.name,
@@ -49,19 +47,14 @@ module.exports = function(app) {
       hotelPrice: roomInfo.price,
       hotelURL: roomInfo.url
     };
-   
-
-    console.log(searchResult)
-
-
-    
+         
     db.Bookings.create(searchResult).then(function(dbbooking) {
       res.json(dbbooking);
     });
   });
 
   // Delete an example by id
-  app.delete("/api/booking/:id", function(req, res) {
+  app.delete("/api/search/:id", function(req, res) {
     db.Booking.destroy({ where: { id: req.params.id } }).then(function(dbbooking) {
       res.json(dbbooking);
     });

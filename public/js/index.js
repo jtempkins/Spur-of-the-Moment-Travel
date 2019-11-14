@@ -11,19 +11,21 @@ $(document).ready(function() {
 
   function startSearch(newSearch) {
     console.log(newSearch);
-    $.post("api/search", newSearch, getSearches);
+    $.post("api/search", newSearch)
+      .then(getSearches($name))
   }
 
-  function getSearches(newSearch) {
-    let searchName = newSearch.name || "";
+  function getSearches($name) {
+    let searchName = $name || "";
     if (searchName) {
       searchName = "?name=" + searchName;
     }
-    $.get("/api/search/" + searchName, function(data) {
+    console.log(searchName)
+    $.get("/api/search/", newSearch, function(data) {
       console.log("Search History", data);
       searches = data;
       if (!searches || !searches.length) {
-        displayEmpty(author);
+        displayEmpty(searches);
       } else {
         initializeRows(searches);
       }
@@ -77,7 +79,8 @@ $(document).ready(function() {
       return;
     }
 
-    startSearch(newSearch);
+    startSearch(newSearch)
+      .then(getSearches($name))
 
     // $destination.val("");
     // $departure.val("");
