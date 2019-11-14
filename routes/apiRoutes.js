@@ -9,7 +9,7 @@ var flightAPI = require("../externalRoutes/skyscannerAPI.js");
 
 module.exports = function(app) {
   // Get all in booking table
-  app.get("/api/search", function(req, res) {
+  app.get("/api/search/", function(req, res) {
     db.Bookings.findAll({
       where: {
         name: req.body.name
@@ -56,6 +56,7 @@ module.exports = function(app) {
 
     
     db.Bookings.create(searchResult).then(function(dbbooking) {
+      console.log(dbbooking)
       res.json(dbbooking);
     });
   });

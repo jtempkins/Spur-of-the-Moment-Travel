@@ -11,7 +11,7 @@ $(document).ready(function() {
 
   function startSearch(newSearch) {
     console.log(newSearch);
-    $.post("api/search", newSearch, getSearches);
+    $.post("api/search", newSearch, getSearches(newSearch));
   }
 
   function getSearches(newSearch) {
@@ -23,7 +23,7 @@ $(document).ready(function() {
       console.log("Search History", data);
       searches = data;
       if (!searches || !searches.length) {
-        displayEmpty(author);
+        displayEmpty(searches);
       } else {
         initializeRows(searches);
       }
