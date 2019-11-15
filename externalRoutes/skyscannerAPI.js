@@ -32,7 +32,7 @@ function getSessionID(destination, departureDate, returnDate) {
     });
 
     start.end(function (res) {
-      if (res.error) throw new Error(res.error);
+      if (res.error) throw new Error(res.code);
 
       let location = res.headers.location;
       let sessionID = location.replace("http://partners.api.skyscanner.net/apiservices/pricing/uk2/v1.0/","");
@@ -100,7 +100,7 @@ function getFlightResults(sessionID){
         console.log(error); //.request.res.statusMessage
       });
   });
-};
+}
 
 var searchFlights = async function (data) {
   console.log(data);

@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">Trip Quote #{{quote.id}} for {{quote.name}}</h5>
+          <p><strong>Destination</strong>: {{quote.destination}}</p>
+          <p><strong>Departure Date</strong>: {{quote.departureDate}}</p>
+          <p><strong>Return Date</strong>: {{quote.returnDate}}</p>
+          <p><strong>Flight Price</strong>: {{quote.flightPrice}}</p>
+          <p><strong>Airline</strong>: {{quote.airline}}</p>
+          <p><strong>Hotel Name</strong>: <a href={{quote.hotelURL}}>{{quote.hotelName}}</a></p>
+          <p><strong>Hotel Price</strong>: {{quote.hotelPrice}}</p>
+                   
+          <p><strong>Total Price</strong>: (Needs additional logic)</p>           
+                
+            <a href="/api/search/{{quote.name}}">← Back To Search List</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
