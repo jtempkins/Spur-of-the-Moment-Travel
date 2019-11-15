@@ -12,12 +12,27 @@ module.exports = function(app) {
   });
 
   // Load example page and pass in an example by id
-  app.get("/booking/:id", function(req, res) {
-    db.Bookings.findOne({ where: { name: req.params.id } }).then(function(
-      dbbooking
-    ) {
-      res.rend("indesx", {
-        booking: dbbooking
+  app.get("/api/search/:name", function(req, res) {
+    db.Bookings.findAll({
+      where: {
+        name: req.params.name
+      }
+    }).then(function(dbbooking) {
+      res.render("index", {
+        bookings: dbbooking
+      });
+    });
+  });
+
+  // Load example page and pass in an example by id
+  app.get("/api/quote/:id", function(req, res) {
+    db.Bookings.findOne({
+      where: {
+        id: req.params.id
+      }
+    }).then(function(dbquote) {
+      res.render("quote", {
+        quote: dbquote
       });
     });
   });

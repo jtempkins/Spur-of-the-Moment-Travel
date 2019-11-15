@@ -3,7 +3,6 @@ $(document).ready(function() {
   // Get references to page elements
   var $name = "#name";
   var $destination = "#destination";
-  //add switch case
 
   var $departure = "#departure";
   var $arrival = "#arrival";
@@ -12,17 +11,16 @@ $(document).ready(function() {
   function startSearch(newSearch) {
     console.log(newSearch);
     $.post("api/search", newSearch)
-      .then(getSearches($name))
+      .then(getSearches(newSearch.name));
   }
 
   function getSearches($name) {
     let searchName = $name || "";
-    if (searchName) {
-      searchName = "?name=" + searchName;
-    }
-    console.log(searchName)
-    $.get("/api/search/", newSearch, function(data) {
+    
+    console.log(searchName);
+    $.get("/api/search/" + searchName, function(data) {
       console.log("Search History", data);
+      window.location.href = "/api/search/" + searchName; 
       searches = data;
       if (!searches || !searches.length) {
         displayEmpty(searches);
@@ -46,8 +44,8 @@ $(document).ready(function() {
     var rowsToAdd = [];
     for (var i = 0; i < data.length; i++) {
       rowsToAdd.push(createSearchRow(data[i]));
+      $("search-list").prepend(rowsToAdd);
     }
-    $searchList.prepend(rowsToAdd);
   }
 
   function deleteSearch(id) {
@@ -79,9 +77,7 @@ $(document).ready(function() {
       return;
     }
 
-    startSearch(newSearch)
-      .then(getSearches($name))
-
+    startSearch(newSearch);
     // $destination.val("");
     // $departure.val("");
     // $arrival.val("");
@@ -90,4 +86,11 @@ $(document).ready(function() {
   // Add event listeners to the submit and delete buttons
 
   $("#searchform").on("submit", handleFormSubmit);
+  $(".delquote").on("click", function (event) {
+    var id = $(this).data("id");
+    var name = $(this).data("name");
+    deleteSearch(id);
+    location.reload();
+    getSearches(name);
+  });
 });
